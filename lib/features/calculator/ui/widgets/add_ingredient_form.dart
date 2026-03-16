@@ -33,78 +33,102 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
       weightController.clear();
       priceController.clear();
       proteinController.clear();
+      FocusScope.of(context).unfocus();
     }
+  }
+
+  InputDecoration _getInputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      filled: true,
+      fillColor: Colors.grey[50],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.border),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: AppColors.cardBg,
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: AppColors.border),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.cardBg,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            // ignore: deprecated_member_use
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: AppStrings.ingredientName,
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          TextField(
+            controller: nameController,
+            keyboardType: TextInputType.text,
+            textDirection: TextDirection.rtl,
+            decoration: _getInputDecoration(AppStrings.ingredientName),
+          ),
+          Spacing.height(12),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: weightController,
+                  keyboardType: TextInputType.number,
+                  decoration: _getInputDecoration(AppStrings.weight),
+                ),
               ),
-            ),
-            Spacing.height(10),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: weightController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: AppStrings.weight,
-                    ),
-                  ),
+              Spacing.width(8),
+              Expanded(
+                child: TextField(
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  decoration: _getInputDecoration(AppStrings.price),
                 ),
-                Spacing.width(10),
-                Expanded(
-                  child: TextField(
-                    controller: priceController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: AppStrings.price,
-                    ),
-                  ),
-                ),
-                Spacing.width(10),
-                Expanded(
-                  child: TextField(
-                    controller: proteinController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: AppStrings.protein,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Spacing.height(20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _submit,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-                child: const Text(AppStrings.addBtn),
               ),
+              Spacing.width(8),
+              Expanded(
+                child: TextField(
+                  controller: proteinController,
+                  keyboardType: TextInputType.number,
+                  decoration: _getInputDecoration(AppStrings.protein),
+                ),
+              ),
+            ],
+          ),
+          Spacing.height(20),
+          ElevatedButton(
+            onPressed: _submit,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 2,
             ),
-          ],
-        ),
+            child: const Text(
+              AppStrings.addBtn,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
     );
   }
