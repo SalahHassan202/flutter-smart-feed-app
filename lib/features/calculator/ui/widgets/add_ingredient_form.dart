@@ -79,7 +79,8 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
         children: [
           TextField(
             controller: nameController,
-            keyboardType: TextInputType.text,
+            keyboardType: TextInputType.visiblePassword,
+            obscureText: false,
             textDirection: TextDirection.rtl,
             textAlign: TextAlign.right,
             decoration: _getInputDecoration(AppStrings.ingredientName),
@@ -90,7 +91,9 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
               Expanded(
                 child: TextField(
                   controller: weightController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   textAlign: TextAlign.right,
                   decoration: _getInputDecoration(AppStrings.weight),
                 ),
@@ -99,7 +102,9 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
               Expanded(
                 child: TextField(
                   controller: priceController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   textAlign: TextAlign.right,
                   decoration: _getInputDecoration(AppStrings.price),
                 ),
@@ -108,7 +113,9 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
               Expanded(
                 child: TextField(
                   controller: proteinController,
-                  keyboardType: TextInputType.number,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   textAlign: TextAlign.right,
                   decoration: _getInputDecoration(AppStrings.protein),
                 ),
