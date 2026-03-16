@@ -40,7 +40,7 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
   InputDecoration _getInputDecoration(String label) {
     return InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+      labelStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       filled: true,
       fillColor: Colors.grey[50],
@@ -81,6 +81,7 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
             controller: nameController,
             keyboardType: TextInputType.text,
             textDirection: TextDirection.rtl,
+            textAlign: TextAlign.right,
             decoration: _getInputDecoration(AppStrings.ingredientName),
           ),
           Spacing.height(12),
@@ -90,6 +91,7 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
                 child: TextField(
                   controller: weightController,
                   keyboardType: TextInputType.number,
+                  textAlign: TextAlign.right,
                   decoration: _getInputDecoration(AppStrings.weight),
                 ),
               ),
@@ -98,6 +100,7 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
                 child: TextField(
                   controller: priceController,
                   keyboardType: TextInputType.number,
+                  textAlign: TextAlign.right,
                   decoration: _getInputDecoration(AppStrings.price),
                 ),
               ),
@@ -106,6 +109,7 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
                 child: TextField(
                   controller: proteinController,
                   keyboardType: TextInputType.number,
+                  textAlign: TextAlign.right,
                   decoration: _getInputDecoration(AppStrings.protein),
                 ),
               ),
@@ -121,7 +125,7 @@ class _AddIngredientFormState extends State<AddIngredientForm> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              elevation: 2,
+              elevation: 0,
             ),
             child: const Text(
               AppStrings.addBtn,
