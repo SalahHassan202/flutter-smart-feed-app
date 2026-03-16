@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_styles.dart';
 import '../../../../core/helpers/spacing_helper.dart';
 
 class SummarySection extends StatelessWidget {
@@ -19,46 +18,86 @@ class SummarySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        // ignore: deprecated_member_use
-        color: AppColors.primary.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        // ignore: deprecated_member_use
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        gradient: LinearGradient(
+          // ignore: deprecated_member_use
+          colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            // ignore: deprecated_member_use
+            color: AppColors.primary.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          _buildRow(
+          _buildInfoRow(
             AppStrings.totalCost,
-            "${totalCost.toStringAsFixed(2)} ${AppStrings.currency}",
+            totalCost.toStringAsFixed(2),
+            AppStrings.currency,
           ),
-          Spacing.height(8),
-          _buildRow(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            // ignore: deprecated_member_use
+            child: Divider(color: Colors.white.withOpacity(0.2)),
+          ),
+          _buildInfoRow(
             AppStrings.avgProtein,
-            "${avgProtein.toStringAsFixed(2)} %",
-            isHighlight: true,
+            avgProtein.toStringAsFixed(2),
+            "%",
+            isMain: true,
           ),
-          Spacing.height(8),
-          _buildRow(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            // ignore: deprecated_member_use
+            child: Divider(color: Colors.white.withOpacity(0.2)),
+          ),
+          _buildInfoRow(
             AppStrings.finalPrice,
-            "${avgPrice.toStringAsFixed(2)} ${AppStrings.currency}",
+            avgPrice.toStringAsFixed(2),
+            AppStrings.currency,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRow(String label, String value, {bool isHighlight = false}) {
+  Widget _buildInfoRow(
+    String label,
+    String value,
+    String unit, {
+    bool isMain = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: AppStyles.font14Medium),
         Text(
-          value,
-          style: isHighlight
-              ? AppStyles.font16SemiBold.copyWith(color: AppColors.primary)
-              : AppStyles.font16SemiBold,
+          label,
+          style: const TextStyle(color: Colors.white70, fontSize: 14),
+        ),
+        Row(
+          children: [
+            Text(
+              value,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: isMain ? 24 : 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Spacing.width(4),
+            Text(
+              unit,
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ],
         ),
       ],
     );
