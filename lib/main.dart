@@ -30,7 +30,6 @@ class FeedApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-
           home: const CalculatorScreen(),
         );
       },
