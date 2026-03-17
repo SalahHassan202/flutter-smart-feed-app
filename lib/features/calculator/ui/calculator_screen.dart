@@ -202,6 +202,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               boxShadow: [
                 // ignore: deprecated_member_use
                 BoxShadow(
+                  // ignore: deprecated_member_use
                   color: Colors.black.withOpacity(0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -5),
@@ -247,6 +248,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         hintText: hint,
         // ignore: deprecated_member_use
         hintStyle: AppStyles.font14Medium.copyWith(
+          // ignore: deprecated_member_use
           color: AppColors.textSecondary.withOpacity(0.5),
         ),
         isDense: true,
