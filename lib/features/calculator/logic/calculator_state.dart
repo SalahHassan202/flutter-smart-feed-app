@@ -1,19 +1,17 @@
-import '../data/models/ingredient_model.dart';
-
 abstract class CalculatorState {}
 
 class CalculatorInitial extends CalculatorState {}
 
-class CalculatorUpdated extends CalculatorState {
-  final List<IngredientModel> ingredients;
+class CalculatorResults extends CalculatorState {
   final double totalCost;
+  final double totalWeight;
+  final double avgPrice;
   final double avgProtein;
-  final double avgPricePerKilo;
 
-  CalculatorUpdated({
-    required this.ingredients,
+  CalculatorResults({
     required this.totalCost,
+    required this.totalWeight,
+    required this.avgPrice,
     required this.avgProtein,
-    required this.avgPricePerKilo,
   });
 }
