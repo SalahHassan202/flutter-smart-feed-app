@@ -6,13 +6,13 @@ class AppStyles {
   static TextStyle font20Bold = TextStyle(
     fontSize: 20.sp,
     fontWeight: FontWeight.bold,
-    color: AppColors.textMain,
+    color: AppColors.textPrimary,
   );
 
   static TextStyle font16SemiBold = TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.w600,
-    color: AppColors.textMain,
+    color: AppColors.textPrimary,
   );
 
   static TextStyle font14Medium = TextStyle(
