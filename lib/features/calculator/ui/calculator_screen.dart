@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:smart_feed_app/core/constants/app_colors.dart';
+import 'package:smart_feed_app/core/constants/app_styles.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_strings.dart';
 import '../data/models/ingredient_model.dart';
@@ -62,6 +63,43 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     }
   }
 
+  void _onSave() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final controller = TextEditingController();
+        return AlertDialog(
+          title: const Text('حفظ الخلطة'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: 'أدخل اسم الخلطة'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('إلغاء'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (controller.text.isNotEmpty) {
+                  context.read<CalculatorCubit>().saveCurrentMix(
+                    controller.text,
+                    ingredients,
+                  );
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('تم الحفظ بنجاح')),
+                  );
+                }
+              },
+              child: const Text('حفظ'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _onCalculate() {
     for (int i = 0; i < ingredients.length; i++) {
       ingredients[i].weight = double.tryParse(weightControllers[i].text) ?? 0.0;
@@ -75,24 +113,28 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(AppStrings.appTitle),
+        title: Text(
+          AppStrings.appTitle,
+          style: AppStyles.font20Bold.copyWith(color: AppColors.white),
+        ),
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
         centerTitle: true,
         actions: [
+          IconButton(icon: const Icon(Icons.save), onPressed: _onSave),
           IconButton(
             icon: const Icon(Icons.camera_alt),
             onPressed: _takeScreenshot,
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Screenshot(
-              controller: screenshotController,
-              child: Container(
-                color: AppColors.background,
+      body: Screenshot(
+        controller: screenshotController,
+        child: Container(
+          color: AppColors.background,
+          child: Column(
+            children: [
+              Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(12),
                   itemCount: ingredients.length,
@@ -114,11 +156,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                               flex: 2,
                               child: Text(
                                 ingredients[index].name,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.textPrimary,
-                                ),
+                                style: AppStyles.font16SemiBold,
                               ),
                             ),
                             Expanded(
@@ -129,7 +167,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   labelText: AppStrings.weight,
-                                  labelStyle: const TextStyle(fontSize: 12),
+                                  labelStyle: AppStyles.font14Medium,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -145,7 +183,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
                                   labelText: AppStrings.price,
-                                  labelStyle: const TextStyle(fontSize: 12),
+                                  labelStyle: AppStyles.font14Medium,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -159,31 +197,27 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   },
                 ),
               ),
-            ),
-          ),
-          const CalculatorResultsWidget(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: _onCalculate,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                minimumSize: const Size(double.infinity, 55),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+              const CalculatorResultsWidget(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: _onCalculate,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    minimumSize: const Size(double.infinity, 55),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    AppStrings.calculate,
+                    style: AppStyles.font18WhiteBold,
+                  ),
                 ),
               ),
-              child: const Text(
-                AppStrings.calculate,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
