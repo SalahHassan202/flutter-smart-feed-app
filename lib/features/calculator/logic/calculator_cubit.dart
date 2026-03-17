@@ -1,55 +1,60 @@
+import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'calculator_state.dart';
 import '../data/models/ingredient_model.dart';
-import 'package:uuid/uuid.dart';
 
 class CalculatorCubit extends Cubit<CalculatorState> {
   CalculatorCubit() : super(CalculatorInitial());
 
-  List<IngredientModel> ingredients = [];
+  void calculateMix(List<IngredientModel> ingredients) {
+    double totalWeight = 0;
+    double totalCost = 0;
+    double totalProteinAmount = 0;
 
-  void addIngredient(String name, double weight, double price, double protein) {
-    final newItem = IngredientModel(
-      id: const Uuid().v4(),
-      name: name,
-      weight: weight,
-      pricePerKilo: price,
-      proteinPercentage: protein,
-    );
-    ingredients.add(newItem);
-    _calculateTotals();
-  }
+    for (var item in ingredients) {
+      if (item.weight > 0) {
+        totalWeight += item.weight;
+        totalCost += item.totalIngredientCost;
+        totalProteinAmount += item.proteinAmount;
+      }
+    }
 
-  void deleteIngredient(String id) {
-    ingredients.removeWhere((item) => item.id == id);
-    _calculateTotals();
-  }
-
-  void reset() {
-    ingredients.clear();
-    _calculateTotals();
-  }
-
-  void _calculateTotals() {
-    if (ingredients.isEmpty) {
+    if (totalWeight == 0) {
       emit(CalculatorInitial());
       return;
     }
 
-    double totalWeight = ingredients.fold(0, (sum, item) => sum + item.weight);
-    double totalCost = ingredients.fold(0, (sum, item) => sum + item.totalCost);
-    double totalProteinUnits = ingredients.fold(
-      0,
-      (sum, item) => sum + (item.weight * item.proteinPercentage),
-    );
-
     emit(
-      CalculatorUpdated(
-        ingredients: List.from(ingredients),
+      CalculatorResults(
         totalCost: totalCost,
-        avgProtein: totalWeight > 0 ? totalProteinUnits / totalWeight : 0,
-        avgPricePerKilo: totalWeight > 0 ? totalCost / totalWeight : 0,
+        totalWeight: totalWeight,
+        avgPrice: totalCost / totalWeight,
+        avgProtein: (totalProteinAmount / totalWeight) * 100,
       ),
     );
+  }
+
+  Future<void> saveCurrentMix(
+    String mixName,
+    List<IngredientModel> ingredients,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String> savedMixes = prefs.getStringList('saved_mixes') ?? [];
+
+    final Map<String, dynamic> mixData = {
+      'name': mixName,
+      'date': DateTime.now().toIso8601String(),
+      'ingredients': ingredients.map((e) => e.toJson()).toList(),
+    };
+
+    savedMixes.add(jsonEncode(mixData));
+    await prefs.setStringList('saved_mixes', savedMixes);
+  }
+
+  Future<List<Map<String, dynamic>>> getSavedMixes() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String> history = prefs.getStringList('saved_mixes') ?? [];
+    return history.map((e) => jsonDecode(e) as Map<String, dynamic>).toList();
   }
 }
