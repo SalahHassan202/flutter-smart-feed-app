@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gal/gal.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:smart_feed_app/core/constants/app_colors.dart';
 import 'package:smart_feed_app/core/constants/app_styles.dart';
 import '../../../core/constants/app_constants.dart';
@@ -54,7 +54,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Future<void> _takeScreenshot() async {
     final image = await screenshotController.capture();
     if (image != null) {
-      await ImageGallerySaver.saveImage(image);
+      await Gal.putImageBytes(image);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('تم حفظ الخلطة في المعرض')),
