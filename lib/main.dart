@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'core/theme/app_theme.dart';
-import 'core/constants/app_strings.dart';
+import 'package:smart_feed_app/core/constants/app_colors.dart';
+import 'features/calculator/logic/calculator_cubit.dart';
 import 'features/calculator/ui/calculator_screen.dart';
 
-void main() {
-  runApp(const FeedApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const SmartFeedApp());
 }
 
-class FeedApp extends StatelessWidget {
-  const FeedApp({super.key});
+class SmartFeedApp extends StatelessWidget {
+  const SmartFeedApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +20,31 @@ class FeedApp extends StatelessWidget {
       designSize: const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: AppStrings.appTitle,
-          theme: AppTheme.lightTheme,
-          locale: const Locale('ar', 'EG'),
-          supportedLocales: const [Locale('ar', 'EG'), Locale('en', 'US')],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          home: const CalculatorScreen(),
+      builder: (_, child) {
+        return BlocProvider(
+          create: (context) => CalculatorCubit(),
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Smart Feed App',
+            locale: const Locale('ar', 'EG'),
+            supportedLocales: const [Locale('ar', 'EG')],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            theme: ThemeData(
+              useMaterial3: true,
+              primaryColor: AppColors.primary,
+              scaffoldBackgroundColor: AppColors.background,
+              fontFamily: 'Cairo',
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: AppColors.primary,
+                primary: AppColors.primary,
+              ),
+            ),
+            home: const CalculatorScreen(),
+          ),
         );
       },
     );
