@@ -16,6 +16,9 @@ dependencies:
   flutter_screenutil: ^5.9.3
   flutter_localizations:
     sdk: flutter
+  shared_preferences: ^2.5.4
+  screenshot: ^3.0.0
+  image_gallery_saver: ^2.0.3
 
 dev_dependencies:
   flutter_test:
