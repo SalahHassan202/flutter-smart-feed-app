@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="smart_feed_app"
+        android:label="حاسبة الأعلاف"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
