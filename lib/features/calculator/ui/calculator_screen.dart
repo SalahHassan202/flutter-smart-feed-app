@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:screenshot/screenshot.dart';
-import 'package:smart_feed_app/features/calculator/ui/widgets/results_bottom_sheet.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_styles.dart';
 import '../data/models/ingredient_model.dart';
 import '../logic/calculator_cubit.dart';
 import '../logic/calculator_state.dart';
 import '../../history/ui/history_screen.dart';
+import 'widgets/results_bottom_sheet.dart';
 
 class CalculatorScreen extends StatefulWidget {
   const CalculatorScreen({super.key});
@@ -19,7 +17,6 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  final ScreenshotController screenshotController = ScreenshotController();
   late List<IngredientModel> ingredients;
   late List<TextEditingController> weightControllers;
   late List<TextEditingController> priceControllers;
@@ -27,10 +24,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   void initState() {
     super.initState();
+    _initData();
+  }
+
+  void _initData() {
     ingredients = AppConstants.proteinMap.entries
         .map((e) => IngredientModel(name: e.key, proteinPercentage: e.value))
         .toList();
-
     weightControllers = List.generate(
       ingredients.length,
       (index) => TextEditingController(),
@@ -41,15 +41,45 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    for (var controller in weightControllers) {
-      controller.dispose();
+  void _loadOldMix(Map<String, dynamic> mixData) {
+    List<dynamic> savedIngredients = mixData['ingredients'];
+    for (int i = 0; i < ingredients.length; i++) {
+      var match = savedIngredients.firstWhere(
+        (element) => element['name'] == ingredients[i].name,
+        orElse: () => null,
+      );
+      if (match != null) {
+        weightControllers[i].text = match['weight'].toString();
+        priceControllers[i].text = match['price'].toString();
+      }
     }
-    for (var controller in priceControllers) {
-      controller.dispose();
+    _onCalculate();
+  }
+
+  void _updateIngredientsData() {
+    for (int i = 0; i < ingredients.length; i++) {
+      ingredients[i].weight = double.tryParse(weightControllers[i].text) ?? 0.0;
+      ingredients[i].price = double.tryParse(priceControllers[i].text) ?? 0.0;
     }
-    super.dispose();
+  }
+
+  void _onCalculate() {
+    _updateIngredientsData();
+    context.read<CalculatorCubit>().calculateMix(ingredients);
+    final state = context.read<CalculatorCubit>().state;
+    if (state is CalculatorResults) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => ResultsBottomSheet(
+          totalCost: state.totalCost,
+          totalWeight: state.totalWeight,
+          avgPrice: state.avgPrice,
+          avgProtein: state.avgProtein,
+        ),
+      );
+    }
   }
 
   void _onSave() {
@@ -58,7 +88,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       builder: (context) {
         final controller = TextEditingController();
         return AlertDialog(
-          title: Text('حفظ الخلطة', style: AppStyles.font20Bold),
+          title: const Text('حفظ الخلطة'),
           content: TextField(
             controller: controller,
             decoration: const InputDecoration(hintText: 'أدخل اسم الخلطة'),
@@ -77,9 +107,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     ingredients,
                   );
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('تم الحفظ بنجاح')),
-                  );
                 }
               },
               child: const Text('حفظ'),
@@ -90,125 +117,79 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  void _updateIngredientsData() {
-    for (int i = 0; i < ingredients.length; i++) {
-      ingredients[i].weight = double.tryParse(weightControllers[i].text) ?? 0.0;
-      ingredients[i].price = double.tryParse(priceControllers[i].text) ?? 0.0;
-    }
-  }
-
-  void _onCalculate() {
-    _updateIngredientsData();
-    context.read<CalculatorCubit>().calculateMix(ingredients);
-
-    final state = context.read<CalculatorCubit>().state;
-    if (state is CalculatorResults) {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) => ResultsBottomSheet(
-          totalCost: state.totalCost,
-          totalWeight: state.totalWeight,
-          avgPrice: state.avgPrice,
-          avgProtein: state.avgProtein,
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(
-          AppStrings.appTitle,
-          style: AppStyles.font20Bold.copyWith(color: AppColors.white),
+        title: const Text(
+          "حاسبة الأعلاف",
+          style: TextStyle(fontWeight: FontWeight.w500),
         ),
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
         centerTitle: true,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.history_edu_rounded),
-            onPressed: () => Navigator.push(
+          _buildAppBarAction(Icons.history_rounded, "الأرشيف", () async {
+            final result = await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const HistoryScreen()),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.save_as_rounded),
-            onPressed: _onSave,
-          ),
+            );
+            if (result != null) _loadOldMix(result);
+          }),
+          _buildAppBarAction(Icons.save_rounded, "حفظ", _onSave),
         ],
       ),
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              padding: const EdgeInsets.all(16),
               itemCount: ingredients.length,
               itemBuilder: (context, index) {
-                return Card(
-                  color: AppColors.cardBg,
+                Color itemColor = AppColors
+                    .pastelColors[index % AppColors.pastelColors.length];
+                return Container(
                   margin: const EdgeInsets.only(bottom: 12),
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: itemColor,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            ingredients[index].name,
-                            style: AppStyles.font16SemiBold.copyWith(
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          ingredients[index].name,
+                          style: AppStyles.font16SemiBold,
                         ),
-                        Expanded(
-                          flex: 2,
-                          child: _buildTextField(
-                            weightControllers[index],
-                            AppStrings.weight,
-                            '0.0',
-                          ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: _buildInput(
+                          weightControllers[index],
+                          "الوزن (كجم)",
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          flex: 2,
-                          child: _buildTextField(
-                            priceControllers[index],
-                            AppStrings.price,
-                            '0.0',
-                          ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        flex: 3,
+                        child: _buildInput(
+                          priceControllers[index],
+                          "السعر (جنيه)",
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: AppColors.cardBg,
-              boxShadow: [
-                // ignore: deprecated_member_use
-                BoxShadow(
-                  // ignore: deprecated_member_use
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
+            padding: const EdgeInsets.all(16),
+            color: Colors.white,
             child: ElevatedButton(
               onPressed: _onCalculate,
               style: ElevatedButton.styleFrom(
@@ -218,9 +199,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              child: Text(
-                AppStrings.calculate,
-                style: AppStyles.font18WhiteBold,
+              child: const Text(
+                "احسب النتائج",
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
           ),
@@ -229,44 +210,36 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  Widget _buildTextField(
-    TextEditingController controller,
-    String label,
-    String hint,
-  ) {
+  Widget _buildInput(TextEditingController controller, String hint) {
     return TextField(
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       textAlign: TextAlign.center,
-      style: AppStyles.font14Medium.copyWith(
-        color: AppColors.textPrimary,
-        fontWeight: FontWeight.bold,
-      ),
       decoration: InputDecoration(
-        labelText: label,
-        labelStyle: AppStyles.font14Medium,
         hintText: hint,
-        // ignore: deprecated_member_use
-        hintStyle: AppStyles.font14Medium.copyWith(
-          // ignore: deprecated_member_use
-          color: AppColors.textSecondary.withOpacity(0.5),
-        ),
-        isDense: true,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 12,
-        ),
+        hintStyle: const TextStyle(fontSize: 11, color: Colors.black38),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(vertical: 8),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+      ),
+    );
+  }
+
+  Widget _buildAppBarAction(IconData icon, String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 20),
+            Text(label, style: const TextStyle(fontSize: 9)),
+          ],
         ),
       ),
     );
