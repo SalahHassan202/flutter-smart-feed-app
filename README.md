@@ -1,58 +1,166 @@
+# 🌾 Smart Feed App
 
-```markdown
-# FeedMix Pro
-**Smart animal feed calculator for professional farmers.**
-A simple and smart app for farmers to calculate animal feed mixes. It helps users find the total cost and protein percentage easily. Built with Flutter, Bloc (Cubit), and Clean Code. 
+A modern Flutter application built for livestock feed calculation and management 🌾📱
 
----
-
-## Features
-* **Real-time Calculations:** Get results instantly as you add ingredients.
-* **Clean & Modern UI:** Simple green design comfortable for the eye.
-* **Responsive Design:** Works perfectly on all Android screen sizes.
-* **Smart Management:** Add, delete, or reset your feed mix easily.
-* **Arabic Language:** Fully supports Arabic RTL direction.
+Smart Feed App helps users calculate protein ratios and total feed costs using different raw materials with a clean and smooth user experience ✨
 
 ---
 
-## Tech Stack
-* **Framework:** Flutter
-* **State Management:** BLoC (Cubit)
-* **Pattern:** Feature-first Structure
-* **Responsiveness:** Flutter ScreenUtil
-* **Icons:** Material Symbols
+# 💙 About The Project
+
+This project was built as a real-world application to simplify feed calculations and make the process faster and easier 🔥
+
+The app focuses on:
+
+* Real-time calculations ⚡
+* Clean UI 🎨
+* Fast local storage 💾
+* Smooth user experience 📱
+* Arabic RTL support 🌍
+
+The project also helped improve skills in:
+
+* State Management 🧠
+* Flutter Architecture 🏗️
+* Business Logic 🔢
+* Local Storage 📦
+* Responsive Design 📲
+* Screenshot & Gallery Handling 📸
 
 ---
 
-## Project Structure 
-The project follows a clean **feature-based** architecture:
-- `core/`: Contains constants, theme, and common helpers.
-- `features/calculator/`: The main feature including logic (Cubit), data models, and UI widgets.
+# 🎥 Demo Preview
+
+Watch Demo Video 🎬
+
+https://www.linkedin.com/posts/salah-hassan66190_flutter-mobiledevelopment-dart-ugcPost-7459677568842223616-0pAV?utm_source=share&utm_medium=member_android&rcm=ACoAAFY2TGMBI-LuRPjN8vwwkj21qlrQwdAev7M
 
 ---
 
-## How to Run
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/YOUR_USERNAME/FeedMix-Pro.git](https://github.com/YOUR_USERNAME/FeedMix-Pro.git)
+# 📱 Screenshots
 
+<div align="center">
+
+<img src="./assets/screenshots/01.jpg" width="170"/>
+<img src="./assets/screenshots/02.jpg" width="170"/>
+<img src="./assets/screenshots/03.jpg" width="170"/>
+<img src="./assets/screenshots/04.jpg" width="170"/>
+
+<br/>
+
+<img src="./assets/screenshots/05.jpg" width="200"/>
+<img src="./assets/screenshots/06.jpg" width="200"/>
+<img src="./assets/screenshots/07.jpg" width="200"/>
+
+</div>
+
+---
+
+# ✨ Features
+
+* Real-time protein calculation ⚡
+* Total feed cost calculation 💰
+* Add multiple ingredients 🌽
+* Save feed mixes locally 💾
+* History management 📚
+* Export results as images 📸
+* Responsive UI 📱
+* Arabic RTL support 🌍
+* Smooth navigation 🚀
+* Clean and modern design 🎨
+
+---
+
+# 🛠 Tech Stack
+
+## 🚀 Framework & Language
+
+* Flutter
+* Dart
+
+## 🧠 State Management
+
+* flutter_bloc
+* bloc
+
+## 💾 Local Storage
+
+* shared_preferences
+
+## 📸 Screenshot & Gallery
+
+* screenshot
+* gal
+
+## 🎨 UI & Utilities
+
+* flutter_screenutil
+* flutter_localizations
+* cupertino_icons
+* uuid
+
+## 🧰 Development Tools
+
+* flutter_launcher_icons
+* flutter_lints
+
+---
+
+# 📂 Folder Structure
+
+```bash
+lib/
+├── core/
+│   ├── theme/
+│   ├── widgets/
+│   └── utils/
+├── features/
+│   ├── calculator/
+│   │   ├── data/
+│   │   │   └── models/
+│   │   ├── logic/
+│   │   └── ui/
+│   │       └── widgets/
+│   └── history/
+│       ├── data/
+│       ├── logic/
+│       └── ui/
+└── main.dart
 ```
 
-2. Install packages:
+---
+
+# 🚀 Getting Started
+
+Clone the repository 📦
+
+```bash
+git clone https://github.com/SalahHassan202/flutter-smart-feed-app.git
+```
+
+Go to project folder 📂
+
+```bash
+cd flutter-smart-feed-app
+```
+
+Install dependencies ⚙️
+
 ```bash
 flutter pub get
-
 ```
 
+Run the app ▶️
 
-3. Run the app:
 ```bash
 flutter run
-
 ```
 
-## Developer
+---
 
-**Salah Hassan** - Computer Engineer & Flutter Developer.
+# 👨‍💻 Author
 
-```
+Salah Hassan
+
+🔗 GitHub
+https://github.com/SalahHassan202
