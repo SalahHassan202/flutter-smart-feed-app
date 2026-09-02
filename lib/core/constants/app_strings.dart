@@ -24,4 +24,18 @@ class AppStrings {
   static const String molasses = 'مولاس';
   static const String additives = 'إضافات';
   static const String plasticMixer = 'بلاستيك وخلاط';
+  static const String cottonSeed = 'بذرة';
+  static const String flaxSeed = 'كتان';
+
+  // Add ingredient dialog
+  static const String addIngredient = 'إضافة خامة';
+  static const String addIngredientTitle = 'إضافة خامة جديدة';
+  static const String ingredientNameHint = 'اسم الخامة (مثلاً: بذرة كتان)';
+  static const String proteinPercentageHint = 'نسبة البروتين %';
+  static const String cancel = 'إلغاء';
+  static const String add = 'إضافة';
+  static const String invalidIngredientInput = 'من فضلك اكتب اسم صحيح ونسبة بروتين صحيحة';
+  static const String ingredientAlreadyExists = 'الخامة دي موجودة بالفعل';
+  static const String deleteIngredientTitle = 'حذف الخامة';
+  static const String delete = 'حذف';
 }
