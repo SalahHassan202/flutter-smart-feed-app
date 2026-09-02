@@ -14,5 +14,11 @@ class AppConstants {
     AppStrings.molasses: 10.0,
     AppStrings.additives: 0.0,
     AppStrings.plasticMixer: 0.0,
+    AppStrings.cottonSeed: 22.0,
+    AppStrings.flaxSeed: 22.0,
   };
+
+  /// Key used to persist user-added ingredients (name + fixed protein %)
+  /// in SharedPreferences, so they survive app restarts and app updates.
+  static const String customIngredientsPrefsKey = 'custom_ingredients';
 }

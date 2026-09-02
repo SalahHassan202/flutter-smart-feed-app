@@ -1,8 +1,8 @@
+import 'package:feed_calculator/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:smart_feed_app/core/constants/app_colors.dart';
 import 'features/calculator/logic/calculator_cubit.dart';
 import 'features/calculator/ui/calculator_screen.dart';
 

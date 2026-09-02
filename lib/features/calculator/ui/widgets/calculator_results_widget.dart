@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:gal/gal.dart';
-import 'package:smart_feed_app/core/constants/app_colors.dart';
+import 'package:feed_calculator/core/constants/app_colors.dart';
 
 class ResultsBottomSheet extends StatelessWidget {
   final double totalCost;
