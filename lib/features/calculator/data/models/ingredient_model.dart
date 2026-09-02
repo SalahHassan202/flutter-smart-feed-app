@@ -3,12 +3,14 @@ class IngredientModel {
   double weight;
   double price;
   final double proteinPercentage;
+  final bool isCustom;
 
   IngredientModel({
     required this.name,
     this.weight = 0.0,
     this.price = 0.0,
     required this.proteinPercentage,
+    this.isCustom = false,
   });
 
   double get totalIngredientCost => weight * price;
